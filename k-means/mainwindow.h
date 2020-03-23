@@ -9,6 +9,7 @@
 #include<QPoint>
 #include <stdlib.h>
 #include <time.h>
+#include <QVector3D>
 
 namespace Ui {
 class MainWindow;
@@ -32,8 +33,12 @@ private:
     Ui::MainWindow *ui;
 
 
-    QVector<QPoint>points;
+    QVector<QVector3D>points;
     QVector<QPoint>clusterPoints;
+    QVector<QColor>colors;
+
+private:
+    double euclidianDistance(QVector3D point1,QPoint point2 );
 
 };
 

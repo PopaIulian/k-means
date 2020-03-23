@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QInputDialog>
+#include <QtMath>
+#include "qmath.h"
+#include <float.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -9,16 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     srand (time(NULL));
 
-    //QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),tr("Nr. of points:"), QLineEdit::Normal);
+    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),tr("Nr. of points:"), QLineEdit::Normal);
 
-   int k=50;//text.toInt();
+    int k=text.toInt();
 
     for(int i=0;i<k;i++)
     {
-        int pozx = rand() % 500 + 2;
-
-        int pozy = rand() % 500 + 2;
-        points.push_back(QPoint(pozx,pozy));
+        int pozx = rand() % 1500 + 2;
+        int pozy = rand() % 900 + 2;
+        points.push_back(QVector3D(pozx,pozy,-1));
     }
 }
 
@@ -30,26 +32,83 @@ MainWindow::~MainWindow()
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
-                                            tr("Nr. of cluser:"), QLineEdit::Normal);
+                                         tr("Nr. of cluser:"), QLineEdit::Normal);
 
-   int k=text.toInt();
-   for(int i=0;i<k;i++)
-   {
-       int pozx = rand() % 500 + 2;
+    int k=text.toInt();
+    for(int i=0;i<k;i++)
+    {
+        int pozx = rand() % 500 + 2;
+        int pozy = rand() % 500 + 2;
+        clusterPoints.push_back(QPoint(pozx,pozy));
 
-       int pozy = rand() % 500 + 2;
-       clusterPoints.push_back(QPoint(pozx,pozy));
-   }
+
+        int r = rand() % 255;
+        int g = rand() % 255;
+        int b = rand() % 255;
+
+        QColor c=QColor(r,g,b, 255);
+        colors.push_front(c);
+
+    }
+
+    for(int i=0;i<points.size();i++)
+    {
+        double minDist=DBL_MAX;
+        int  poz=-1;
+        for(int j=0;j<clusterPoints.size();j++)
+        {
+            double dist=euclidianDistance(points[i],clusterPoints[j]);
+            if(dist < minDist)
+            {
+                minDist=dist;
+                poz=j;
+            }
+        }
+        points[i].setZ(poz);
+    }
+
+}
+
+double MainWindow::euclidianDistance(QVector3D point1,QPoint point2 )
+{
+    return qSqrt(((point1.x()-point2.x())*(point1.x()-point2.x()))+((point1.y()-point2.y())*(point1.y()-point2.y())));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-    /*if(event->key()==Qt::Key_Escape)
+    if(event->key()==Qt::Key_Escape)
     {
-        introducere=false;
-        formeaza_conexiuni();
+        for(int q=0;q<50;q++)
+        {
+            QPair<QPoint,int> pair=qMakePair(QPoint(0,0),0);
+            QVector<QPair<QPoint,int>> app(clusterPoints.size(),pair);
+
+            for(int i=0;i<points.size();i++)
+            {
+                double minDist=DBL_MAX;
+                int  poz=-1;
+                for(int j=0;j<clusterPoints.size();j++)
+                {
+                    double dist=euclidianDistance(points[i],clusterPoints[j]);
+                    if(dist < minDist)
+                    {
+                        minDist=dist;
+                        poz=j;
+                    }
+                }
+                points[i].setZ(poz);
+                app[poz].first.setX(app[poz].first.x()+points[i].x());
+                app[poz].first.setY(app[poz].first.y()+points[i].y());
+                app[poz].second++;
+            }
+
+            for(int j=0;j<clusterPoints.size();j++)
+            {
+                clusterPoints[j]=app[j].first/app[j].second;
+            }
+        }
     }
-    repaint();*/
+    repaint();
 }
 
 void MainWindow::paintEvent(QPaintEvent *event)
@@ -60,16 +119,18 @@ void MainWindow::paintEvent(QPaintEvent *event)
     for(int i=0;i<points.size();i++)
         p.drawEllipse(points[i].x(),points[i].y(),5,5);
 
+    for(int i=0;i<points.size();i++)
+    {
 
-    for(int i=0;i<clusterPoints.size();i++)
-       {
-        int r = rand() % 255;
-        int g = rand() % 255;
-        int b = rand() % 255;
+        int clusterPos=points[i].z();
+        if(clusterPos!=-1)
+        {
+            p.setPen(QPen(colors[clusterPos]));
 
-        QColor c=QColor(r,g,b, 255);
-        p.setPen(QPen(c));
+            p.drawEllipse(clusterPoints[clusterPos].x()-5,clusterPoints[clusterPos].y()-5,10,10);
 
-        p.drawEllipse(clusterPoints[i].x(),clusterPoints[i].y(),10,10);
+            p.drawLine(points[i].x(),points[i].y(),clusterPoints[clusterPos].x(),clusterPoints[clusterPos].y());
+        }
     }
+
 }
