@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QInputDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -8,12 +9,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     srand (time(NULL));
 
-    for(int i=0;i<50;i++)
-    {
-        int pozx = rand() % 500 + 1;
+    //QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),tr("Nr. of points:"), QLineEdit::Normal);
 
-        int pozy = rand() % 500 + 1;
-        puncte.push_back(QPoint(pozx,pozy));
+   int k=50;//text.toInt();
+
+    for(int i=0;i<k;i++)
+    {
+        int pozx = rand() % 500 + 2;
+
+        int pozy = rand() % 500 + 2;
+        points.push_back(QPoint(pozx,pozy));
     }
 }
 
@@ -24,8 +29,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    //puncte.push_back(QPoint(event->x(),event->y()));
-    //repaint();
+    QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+                                            tr("Nr. of cluser:"), QLineEdit::Normal);
+
+   int k=text.toInt();
+   for(int i=0;i<k;i++)
+   {
+       int pozx = rand() % 500 + 2;
+
+       int pozy = rand() % 500 + 2;
+       clusterPoints.push_back(QPoint(pozx,pozy));
+   }
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -43,7 +57,19 @@ void MainWindow::paintEvent(QPaintEvent *event)
     QPainter p;
     p.begin(this);
 
-    for(int i=0;i<puncte.size();i++)
-        p.drawEllipse(puncte[i].x(),puncte[i].y(),5,5);
+    for(int i=0;i<points.size();i++)
+        p.drawEllipse(points[i].x(),points[i].y(),5,5);
 
+
+    for(int i=0;i<clusterPoints.size();i++)
+       {
+        int r = rand() % 255;
+        int g = rand() % 255;
+        int b = rand() % 255;
+
+        QColor c=QColor(r,g,b, 255);
+        p.setPen(QPen(c));
+
+        p.drawEllipse(clusterPoints[i].x(),clusterPoints[i].y(),10,10);
+    }
 }

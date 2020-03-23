@@ -32,7 +32,8 @@ private:
     Ui::MainWindow *ui;
 
 
-    QVector<QPoint>puncte;
+    QVector<QPoint>points;
+    QVector<QPoint>clusterPoints;
 
 };
 
