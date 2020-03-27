@@ -13,7 +13,7 @@ class Cluster
 {
 public:
 	Cluster();
-	Cluster(const QPoint&  position);
+	Cluster(const QPoint& clusterPosition);
 	~Cluster();
 
 public:
@@ -21,12 +21,15 @@ public:
 	QColor GetColor() const;
 	QPoint GetPosition() const;
 	void SetPosition(const QPoint & position);
-	void AddPointIndex(uint index);
+	void AddPointIndex(uint pointIndex, QPoint pointPosition);
 	void ClearPointsIndex();
+	double GetDensity() const;
+	const QPair<QPoint, QPoint>& GetBoundingBox() const;
 
 private:
-	QSet<uint> pointsIndex;
-	QColor color;
-	QPoint position;
+	QSet<uint> m_pointsIndex;
+	QColor m_color;
+	QPoint m_position;
+	QPair<QPoint, QPoint> m_boundingBox;
 };
 

@@ -39,8 +39,8 @@ private:
 	bool mustPrintBox;
 
 private:
-	double euclidianDistance(QPoint point1, QPoint point2);
-	void determineCluster();
+	double EuclidianDistance(QPoint point1, QPoint point2);
+	void DetermineCluster();
 };
 
 #endif // MAINWINDOW_H
