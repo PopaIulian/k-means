@@ -11,18 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 	mustPrintBox = false;
-	srand(time(NULL));
 
-	QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"), tr("Nr. of points:"), QLineEdit::Normal);
-
-	int k = text.toInt();
-
-	for (int i = 0; i < k; i++)
-	{
-		int pozx = rand() % 1900 + 2;
-		int pozy = rand() % 1000 + 2;
-		points.push_back(QPoint(pozx, pozy));
-	}
 }
 
 MainWindow::~MainWindow()
@@ -104,8 +93,23 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			}
 		}
 	}
-	else if (event->key() == Qt::Key_0)
+    else if (event->key() == Qt::Key_Shift)
 		mustPrintBox = true;
+    else if (event->key() == Qt::Key_Space)
+    {
+        srand(time(NULL));
+
+        QString text = QInputDialog::getText(this, tr("QInputDialog::getText()"), tr("Nr. of points:"), QLineEdit::Normal);
+
+        int k = text.toInt();
+
+        for (int i = 0; i < k; i++)
+        {
+            int pozx = rand() % 1900 + 2;
+            int pozy = rand() % 1000 + 2;
+            points.push_back(QPoint(pozx, pozy));
+        }
+    }
 	repaint();
 }
 
