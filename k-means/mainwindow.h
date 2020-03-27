@@ -39,7 +39,7 @@ private:
 
 private:
     double euclidianDistance(QVector3D point1,QPoint point2 );
-
+	void determineCluster();
 };
 
 #endif // MAINWINDOW_H
