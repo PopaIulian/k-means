@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QVector3D>
+#include <QSet>
 
 class Cluster
 {
@@ -16,14 +17,16 @@ public:
 	~Cluster();
 
 public:
-    const QVector<uint>& GetPointsIndex() const;
-    QColor GetColor() const;
-    QPoint GetPosition() const;
-    void SetPosition(const QPoint & position);
+	const QSet<uint>& GetPointsIndex() const;
+	QColor GetColor() const;
+	QPoint GetPosition() const;
+	void SetPosition(const QPoint & position);
+	void AddPointIndex(uint index);
+	void ClearPointsIndex();
 
 private:
-    QVector<uint> pointsIndex;
-    QColor color;
-    QPoint position;
+	QSet<uint> pointsIndex;
+	QColor color;
+	QPoint position;
 };
 

@@ -13,33 +13,33 @@
 #include "Cluster.h"
 
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+	explicit MainWindow(QWidget *parent = nullptr);
+	~MainWindow();
 
 protected:
-    virtual void mousePressEvent(QMouseEvent *event) override;
-    virtual void keyPressEvent(QKeyEvent *event) override;
-    virtual void paintEvent(QPaintEvent *event) override;
+	virtual void mousePressEvent(QMouseEvent *event) override;
+	virtual void keyPressEvent(QKeyEvent *event) override;
+	virtual void paintEvent(QPaintEvent *event) override;
 
 
 private:
-    Ui::MainWindow *ui;
+	Ui::MainWindow *ui;
 
 
-    QVector<QVector3D>points;
-    QVector<Cluster>clusterPoints;
+	QVector<QPoint>points;
+	QVector<Cluster>clusterPoints;
 	bool mustPrintBox;
 
 private:
-    double euclidianDistance(QVector3D point1,QPoint point2 );
+	double euclidianDistance(QPoint point1, QPoint point2);
 	void determineCluster();
 };
 

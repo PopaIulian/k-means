@@ -9,7 +9,7 @@ Cluster::Cluster()
 }
 
 Cluster::Cluster(const QPoint& position)
-        : position( position )
+	: position(position)
 {
 	int r = rand() % 255;
 	int g = rand() % 255;
@@ -23,7 +23,7 @@ Cluster::~Cluster()
 {
 }
 
-const QVector<uint>& Cluster::GetPointsIndex() const
+const QSet<uint>& Cluster::GetPointsIndex() const
 {
 	return pointsIndex;
 }
@@ -40,5 +40,15 @@ QPoint Cluster::GetPosition() const
 
 void Cluster::SetPosition(const QPoint &pos)
 {
-    position=pos;
+	position = pos;
+}
+
+void Cluster::AddPointIndex(uint index)
+{
+	pointsIndex.insert(index);
+}
+
+void Cluster::ClearPointsIndex()
+{
+	pointsIndex.clear();
 }
