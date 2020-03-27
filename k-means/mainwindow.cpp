@@ -35,12 +35,6 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 	if (event->buttons() == Qt::LeftButton)
 	{
 		clusterPoints.push_back(QPoint(event->pos().x(), event->pos().y()));
-		int r = rand() % 255;
-		int g = rand() % 255;
-		int b = rand() % 255;
-
-		QColor c = QColor(r, g, b, 255);
-		colors.push_front(c);
 
 		determineCluster();
 	}
@@ -51,7 +45,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 		for (int i = 0; i < clusterPoints.size(); i++)
 		{
 			QVector3D point(event->pos().x(), event->pos().y(), 0);
-			double dist = euclidianDistance(point, clusterPoints[i]);
+            double dist = euclidianDistance(point, clusterPoints[i].GetPosition());
 			if (dist < minDistance)
 			{
 				minDistance = dist;
@@ -59,8 +53,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 			}
 		}
 
-		clusterPoints.erase(clusterPoints.begin() + clusterPosition);
-		colors.erase(colors.begin() + clusterPosition);
+        clusterPoints.erase(clusterPoints.begin() + clusterPosition);
 
 		determineCluster();
 	}
@@ -85,7 +78,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 				int  poz = -1;
 				for (int j = 0; j < clusterPoints.size(); j++)
 				{
-					double dist = euclidianDistance(points[i], clusterPoints[j]);
+                    double dist = euclidianDistance(points[i], clusterPoints[j].GetPosition());
 					if (dist < minDist)
 					{
 						minDist = dist;
@@ -102,9 +95,9 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			for (int j = 0; j < clusterPoints.size(); j++)
 			{
 				QPoint newPosition = sumPosition[j].first / sumPosition[j].second;
-				if (newPosition == clusterPoints[j])
+                if (newPosition == clusterPoints[j].GetPosition())
 					mustContinue = true;
-				clusterPoints[j] = newPosition;
+                clusterPoints[j].SetPosition(newPosition);
 			}
 		}
 	}
@@ -127,13 +120,21 @@ void MainWindow::paintEvent(QPaintEvent *event)
 		int clusterPos = points[i].z();
 		if (clusterPos != -1)
 		{
-			p.setPen(QPen(colors[clusterPos]));
+            p.setPen(QPen(clusterPoints[clusterPos].GetColor()));
 
-			p.drawEllipse(clusterPoints[clusterPos].x() - 5, clusterPoints[clusterPos].y() - 5, 10, 10);
+            p.drawEllipse(clusterPoints[clusterPos].GetPosition().x() - 5, clusterPoints[clusterPos].GetPosition().y() - 5, 10, 10);
 
-			p.drawLine(points[i].x(), points[i].y(), clusterPoints[clusterPos].x(), clusterPoints[clusterPos].y());
+            p.drawLine(points[i].x(), points[i].y(), clusterPoints[clusterPos].GetPosition().x(), clusterPoints[clusterPos].GetPosition().y());
 		}
 	}
+
+    if(mustPrintBox)
+    {
+
+
+
+        mustPrintBox=false;
+    }
 }
 
 
@@ -150,7 +151,7 @@ void MainWindow::determineCluster()
         int  poz = -1;
         for (int j = 0; j < clusterPoints.size(); j++)
         {
-            double dist = euclidianDistance(points[i], clusterPoints[j]);
+            double dist = euclidianDistance(points[i], clusterPoints[j].GetPosition());
             if (dist < minDist)
             {
                 minDist = dist;

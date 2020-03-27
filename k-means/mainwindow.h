@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QVector3D>
+#include "Cluster.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,8 +35,8 @@ private:
 
 
     QVector<QVector3D>points;
-    QVector<QPoint>clusterPoints;
-    QVector<QColor>colors;
+    QVector<Cluster>clusterPoints;
+	bool mustPrintBox;
 
 private:
     double euclidianDistance(QVector3D point1,QPoint point2 );
